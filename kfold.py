@@ -1,6 +1,6 @@
 import numpy as np
-import sklearn.svm
 import pandas as pd
+import sklearn.svm
 
 
 def convert_data_to_dummies(fn, n_columns=None):
@@ -58,8 +58,6 @@ def main():
     return np.array(scores).mean()
 
 
-
-
 if __name__ == '__main__':
     convert_data_to_dummies('mushrooms.csv')
-    print (main())
+    print(main())
