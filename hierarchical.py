@@ -1,3 +1,5 @@
+import skimage.transform
+
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib import cm
@@ -26,9 +28,12 @@ def cluster_distance(a, b, means, i1, i2):
 def main(n, k):
     img = plt.imread(f'{n}.jpg')
     # img = rgb2gray(img)
-    img = img[::3, ::3]
+    s = img.shape
+
+    img = skimage.transform.resize(img, tuple((np.array(s) / 5).tolist()))
+    # img = img[::5, ::5]
     shape = img.shape
-    img = img * (shape[0] + shape[1]) / (2 * 255)
+    img = img * (shape[0] + shape[1])
     values = []
     for x in range(shape[0]):
         for y in range(shape[1]):
@@ -63,4 +68,4 @@ def main(n, k):
 
 
 if __name__ == '__main__':
-    main('2', 10)
+    main('4', 6)

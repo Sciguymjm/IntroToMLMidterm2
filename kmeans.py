@@ -19,7 +19,7 @@ def main(n, k):
     # img = rgb2gray(img)
     img = img[::3, ::3]
     shape = img.shape
-    img = img * (shape[0] + shape[1]) / (2 * 255)
+    img = img * (shape[0] + shape[1]) / 255
     values = []
     for x in range(shape[0]):
         for y in range(shape[1]):
@@ -41,11 +41,16 @@ def main(n, k):
             buckets[lowest_index].append(v)
             clustered_img[int(v[0]), int(v[1])] = lowest_index * 10
         means = [np.array(a).mean(axis=0) for a in buckets]
-    fig, axs = plt.subplots(1, 2)
-    axs[0].imshow(img, cmap=cm.gray)
-    axs[1].imshow(clustered_img)
-    plt.show()
+    return clustered_img, img
 
 
 if __name__ == '__main__':
-    main('2', 10)
+    k = 4
+    img1, _ = main('1', k)
+    img2, _ = main('2', k)
+    img3, _ = main('3', k)
+    fig, axs = plt.subplots(1, 3)
+    for index, i in enumerate([img1, img2, img3]):
+        axs[index].imshow(i)
+    plt.tight_layout()
+    plt.show()

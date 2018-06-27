@@ -27,18 +27,18 @@ def train_test_val_split(input_df: pd.DataFrame, output_df: pd.DataFrame) -> (pd
     return train, test, train_output, test_output
 
 
-def svm_score(train_X, train_Y, test_X, test_Y, type='rbf'):
-    model = sklearn.svm.SVC(kernel=type)
+def svm_score(train_X, train_Y, test_X, test_Y, type='rbf', C=0.1):
+    model = sklearn.svm.SVC(kernel=type, C=C)
     model.fit(np.array(train_X.tolist()), np.array(train_Y.tolist()))
     return model.score(test_X, test_Y)
 
 
-def main():
+def main(type, C):
     # input_ = np.array([[1, 1], [2, 2], [3, 3], [1, 1], [2, 2], [3, 3], [1, 1], [2, 2], [3, 3]])
     # output = np.array([1, 0, 1, 1, 0, 1, 1, 0, 1])
     input_ = pd.read_csv('features.csv', index_col=0).values
     output = pd.read_csv('labels.csv', index_col=0).values[:, 0]
-    k = 10
+    k = 5
     selector = np.random.rand(output.shape[0])
     delta = 1 / float(k)
     bucket_selectors = []
@@ -53,11 +53,13 @@ def main():
         indices = np.arange(k)
         indices = np.delete(indices, n)
         train_X, train_Y = np.concatenate(input_buckets[indices]), np.concatenate(output_buckets[indices])
-        scores.append(svm_score(train_X, train_Y, test_X, test_Y))
-    print(scores)
+        scores.append(svm_score(train_X, train_Y, test_X, test_Y, type=type, C=C))
+    # print(scores)
     return np.array(scores).mean()
 
 
 if __name__ == '__main__':
     convert_data_to_dummies('mushrooms.csv')
-    print(main())
+    for type in ['rbf', 'linear', 'poly', 'sigmoid']:
+        for C in [0.001, 0.01, 0.05, 0.1, 0.2, 0.5, 1.0]:
+            print(type, C, main(type, C))
