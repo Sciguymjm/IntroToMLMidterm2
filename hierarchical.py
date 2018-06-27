@@ -68,4 +68,4 @@ def main(n, k):
 
 
 if __name__ == '__main__':
-    main('4', 6)
+    main('4', 10)
